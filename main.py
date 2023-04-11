@@ -1,23 +1,85 @@
 saldo = 0.0
 histDep = []
 histSaq = []
+usuarios = []
+contas = []
 
 
 def menu():
-    print("Qual operação deseja?\n---- 1 - Deposito\n---- 2 - Saque\n---- 3 - Extrato\n---- 0 - Sair")
-    match int(input()):
-        case 1:
+    print("Qual operação deseja?"
+          "\n---- D - Deposito"
+          "\n---- S - Saque"
+          "\n---- E - Extrato"
+          "\n---- U - Cadastrar Usuário"
+          "\n---- C - Criar Conta"
+          "\n---- Q - Sair")
+    match input().upper():
+        case 'D':
             deposito()
-        case 2:
+        case 'S':
             saque()
-        case 3:
+        case 'E':
             extrato()
-        case 0:
+        case 'U':
+            cadUser()
+        case 'C':
+            cadConta()
+        case 'Q':
             print('Até logo! :)')
             exit()
+        case 'X':
+            for x in usuarios:
+                print(x)
+            for x in contas:
+                print(x)
+            menu()
         case _:
             print('Opção inválida')
             menu()
+
+
+def cadUser():
+    user = input('Informe seu USUARIO: ')
+    cpf = int(input('Informe os numeros do CPF: '))
+    key = False
+
+    for x in range(len(usuarios)):
+        if usuarios[x]['user'] == user or usuarios[x]['cpf'] == cpf:
+            key = True
+            break
+        else:
+            key = False
+
+    if key:
+        print('Esse usuário/cpf já está cadastrado')
+    else:
+        nome = input('Nome completo: ')
+        data_nasc = input('Data de nascimento (dd-mm-aaaa): ')
+        end = input('Endereço (Logradouro, Numero - Bairro - Cidade/UF): ')
+        usuarios.append({'user': user, 'nome': nome, 'data_nasc': data_nasc, 'cpf': cpf, 'end': end})
+        print('Usuário cadastrado!')
+
+    menu()
+
+
+def cadConta():
+    cpf = int(input('Informe seu CPF: '))
+    key = [] * 2
+    for x in range(len(usuarios)):
+        if usuarios[x]['cpf'] == cpf:
+            print(usuarios[x]['cpf'])
+            key = [True, x]
+            break
+        else:
+            key = [False, x + 1]
+
+    if key[0]:
+        contas.append({'agencia': '0001', 'num_conta': len(contas) + 1, 'user': usuarios[key[1]]['user']})
+        print('Conta criada!')
+    else:
+        print('Esse usuário não existe!')
+
+    menu()
 
 
 def deposito():
